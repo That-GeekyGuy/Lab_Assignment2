@@ -1,0 +1,38 @@
+version: 0.2
+
+env:
+  variables:
+    PYTHONDONTWRITEBYTECODE: "1"
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.12
+    commands:
+      - pip install --upgrade pip
+      - pip install -r requirements.txt
+  pre_build:
+    commands:
+      - python --version
+      - pytest --version
+  build:
+    commands:
+      - pytest -v --junitxml=reports/junit.xml
+  post_build:
+    commands:
+      - echo "Build completed on $(date)"
+      - mkdir -p dist
+      - cp app.py requirements.txt dist/
+
+reports:
+  pytest_reports:
+    files:
+      - junit.xml
+    base-directory: reports
+    file-format: JUNITXML
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: dist
+  name: flask-app-$(date +%Y-%m-%d)

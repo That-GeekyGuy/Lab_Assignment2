@@ -35,3 +35,12 @@ def test_add_route_missing_param(client):
 def test_add_route_invalid_param(client):
     response = client.get("/add?a=x&b=3")
     assert response.status_code == 400
+
+
+# --- INTENTIONAL FAILURE -------------------------------------------------
+# Added on purpose to verify the CodeBuild pipeline catches a failing test:
+# the BUILD phase should fail, the build status should be FAILED, and the
+# JUnit report should show 1 failure out of 6 tests.
+# DELETE THIS TEST once the pipeline behaviour has been confirmed.
+def test_intentional_failure_pipeline_check():
+    assert add(2, 2) == 5, "Intentional failure: verifying the pipeline fails the build"
